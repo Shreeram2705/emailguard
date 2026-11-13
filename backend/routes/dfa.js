@@ -1,0 +1,2 @@
+import express from 'express';import {runDFA} from '../algorithms/dfaEngine.js';
+const router=express.Router();router.post('/test',(req,res)=>{try{if(!Array.isArray(req.body.sequence)||req.body.sequence.length>1000)return res.status(400).json({error:'sequence must be an array of at most 1000 S/N tokens'});res.json(runDFA(req.body.sequence));}catch(e){res.status(400).json({error:e.message});}});export default router;

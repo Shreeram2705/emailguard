@@ -1,0 +1,8 @@
+import test from 'node:test';import assert from 'node:assert/strict';import{analyzePatterns}from'../algorithms/regexEngine.js';import{runDFA}from'../algorithms/dfaEngine.js';import{classifyEmail}from'../algorithms/classificationEngine.js';
+test('valid and invalid email syntax are reported',()=>{assert.equal(analyzePatterns({sender:'a@example.com'}).find(x=>x.name==='senderEmailFormat').accepted,true);assert.equal(analyzePatterns({sender:'bad'}).find(x=>x.name==='senderEmailFormat').accepted,false);});
+test('DFA accepts three consecutive S tokens',()=>{const r=runDFA(['N','S','S','S']);assert.equal(r.finalState,'q3');assert.equal(r.accepted,true);});
+test('DFA rejects a sequence interrupted by N',()=>assert.equal(runDFA(['S','N','S']).accepted,false));
+test('safe email remains safe',()=>assert.equal(classifyEmail({sender:'friend@example.com',subject:'Lunch',messageBody:'See you at noon.'}).classification,'SAFE'));
+test('suspicious email has visible evidence',()=>{const r=classifyEmail({sender:'a@example.com',subject:'Urgent account alert',messageBody:'Please verify your account immediately.'});assert.ok(r.riskScore>=20);assert.ok(r.rules.length>0);});
+test('spam email reaches SPAM classification',()=>{const r=classifyEmail({sender:'bad',subject:'URGENT ACT NOW',messageBody:'FREE winner claim now click here!!!'});assert.equal(r.classification,'SPAM');});
+test('repeated spam phrases and risky URLs are detected',()=>{const r=analyzePatterns({sender:'a@example.com',subject:'',messageBody:'Free offer, claim now at http://192.168.1.1'});assert.ok(r.find(x=>x.name==='spamKeywords').count>=2);assert.ok(r.find(x=>x.name==='suspiciousUrls').count>0);});
