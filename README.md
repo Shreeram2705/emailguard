@@ -42,6 +42,10 @@ Run `cd backend; npm test`. Algorithm tests use Node's built in test runner. Dat
 
 This is an educational transparent heuristic, not a mail gateway or machine learning product. Regex syntax checks do not establish that an address exists. Risk scores are rule contributions, capped at 100, and should not be interpreted as probability. Uploaded attachments are not extracted or executed; `.eml` is parsed for sender, recipient, subject, and plain text. URLs are never fetched. HTML is never rendered. Avoid uploading sensitive personal correspondence to an untrusted deployment.
 
+## Deploying the full app on Vercel
+
+The root `vercel.json` configures the repository as two Vercel Services: the Vite frontend and Express backend. It routes `/api/...` to the backend and all other paths to the frontend. Select **Services** as the project framework when importing the repository. Add `MONGODB_URI` in Vercel's Environment Variables using a MongoDB Atlas connection string; a local MongoDB address such as `127.0.0.1` is not reachable from Vercel. The frontend uses the same deployment origin for `/api` automatically, so `VITE_API_URL` is not required. After deployment, check `/api/health` and verify its database field says `connected`. Without a database connection, fallback records are temporary and won't persist between serverless instances. This demo has no authentication, so use synthetic email content only on a public deployment.
+
 ## Demonstration
 
 1. Start MongoDB, backend, and frontend.

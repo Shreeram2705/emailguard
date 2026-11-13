@@ -12,7 +12,7 @@ app.use('/api/emails',emailRouter);app.use('/api/dashboard',dashboard);app.use('
 app.use((err,req,res,next)=>{console.error(err.message);if(err.type==='entity.parse.failed')return res.status(400).json({error:'Invalid JSON request body'});if(err.name==='ValidationError')return res.status(400).json({error:'Invalid request data'});if(err.name==='MulterError')return res.status(400).json({error:err.code==='LIMIT_FILE_SIZE'?'File exceeds 1 MB limit':'Invalid file upload'});const status=err.status||(/Only \.eml/i.test(err.message)?400:500);res.status(status).json({error:status<500?err.message:'Request could not be completed'});});
 const port=Number(process.env.PORT)||4000;
 if(process.env.NODE_ENV!=='test'){
-  app.listen(port,()=>console.log(`EmailGuard API listening on ${port}`));
+  if(!process.env.VERCEL)app.listen(port,()=>console.log(`EmailGuard API listening on ${port}`));
   connectDatabase().catch(err=>console.error(`MongoDB connection failed: ${err.message}; email analyses will use temporary in-memory storage.`));
 }
 export default app;
