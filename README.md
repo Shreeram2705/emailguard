@@ -1,3 +1,7 @@
+
+LIVE LINK:https://email-security-spam-detection-syste-woad.vercel.app/
+
+
 # EmailGuard
 
 EmailGuard is a rule based educational email analyzer integrating Full Stack Web Development, Computer Networks, and Formal Languages and Automata Theory. It analyzes manually entered messages and `.eml`/`.txt` files, displays transparent evidence, saves results in MongoDB, and supports history and alert review.
